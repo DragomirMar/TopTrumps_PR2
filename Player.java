@@ -1,6 +1,6 @@
 import java.util.*;
 
-public class Player implements Comparable<Player>{
+public class Player implements Comparable<Player>, Strategy{
     private String name;
     private Queue<VehicleCard> deck = new ArrayDeque<>();
 
@@ -125,5 +125,60 @@ public class Player implements Comparable<Player>{
 
     public static Comparator<Player> compareByDeckSize() {
         return (p1, p2) -> p2.getDeck().size() - p1.getDeck().size();
+    }
+
+    //ZUSATZAUFGABE , ADDITIONAL TASK
+
+    private List<VehicleCard> knownCards = new ArrayList<>();
+    private String strategy = "RndStrategy";
+
+    public String getStrategy(){return strategy;}
+    public void setStrategy(String newStrategy){strategy = newStrategy;}
+    public VehicleCard.Category randomStrategy(){
+        Random rand = new Random();
+        int categoryNumber = rand.nextInt(7);
+        return VehicleCard.Category.values()[categoryNumber];
+    }
+
+    public VehicleCard.Category averageStrategy(VehicleCard vehicleCard){
+        Map<VehicleCard.Category, Double> average = new HashMap<>();
+        for (int i = 0; i <= 6; ++i) {
+            VehicleCard.Category category = VehicleCard.Category.values()[i];
+            Double avg = 0.0;
+            for (var card : knownCards) {
+                avg += card.getCategories().get(category);
+            }
+            avg = avg / knownCards.size();
+            average.put(category, avg);
+        }
+        for (int i = 0; i <= 6; ++i) {
+            VehicleCard.Category category = VehicleCard.Category.values()[i];
+            if (category.isInverted()) {
+                if (vehicleCard.getCategories().get(category) < average.get(category)) {
+                    return category;
+                } else {
+                    if (vehicleCard.getCategories().get(category) > average.get(category)) {
+                        return category;
+                    }
+                }
+            }
+        }
+        return randomStrategy();
+    }
+    public VehicleCard.Category chooseStrategy(final VehicleCard vehicleCard) {
+        switch(strategy){
+            case "AverageStrategy": return averageStrategy(vehicleCard);
+            default: return randomStrategy();
+        }
+    }
+
+    public VehicleCard.Category chooseNextCategory(){
+        return chooseStrategy(peekNextCard());
+    }
+
+    public Player(final String name, List<VehicleCard> knownCards, String strategy){
+        this(name);
+        this.knownCards = knownCards;
+        this.strategy = strategy;
     }
 }

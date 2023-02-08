@@ -140,4 +140,16 @@ public class VehicleCard implements Comparable<VehicleCard> {
 
         return "- " + this.name + "(" + totalBonus() + ") -> {" + categoriesWithValues + "}";
     }
+
+    //ZUSATZAUFGABE , ADDITIONAL TASK
+    public int compareByCategory(VehicleCard other, VehicleCard.Category category){
+        if(this.getCategories().get(category) > other.getCategories().get(category)){
+            return 1;
+        }else if (this.getCategories().get(category) < other.getCategories().get(category)){
+            return -1;
+        }else{
+            return 0;
+        }
+    }
+
 }
