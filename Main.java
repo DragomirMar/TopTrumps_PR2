@@ -1,7 +1,10 @@
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.*;
+import java.util.function.BiConsumer;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         var categories1 = VehicleCard.newMap(
                 5.0,
                 1.0,
@@ -60,5 +63,22 @@ public class Main {
         list.sort(Player.compareByScore());
         System.out.println(list);
         //System.out.println(playerC.challengePlayer(playerB));
+
+
+        System.out.println("-------------------");
+        System.out.println(vehicleCard1);
+        System.out.println(vehicleCard1.getCategories().get(VehicleCard.Category.ACCELERATION));
+
+
+        System.out.println("--------LATEST-----------");
+        final List<String> allLines = SimpleCsvParser.readAllLinesFrom("src/cars.csv");
+
+        int i = 0;
+        for(var line: allLines){
+            ++i;
+            System.out.println(SimpleCsvParser.parseLine(line));
+            if(i==4){break;}
+        }
+
     }
 }

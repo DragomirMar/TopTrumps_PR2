@@ -181,4 +181,8 @@ public class Player implements Comparable<Player>, Strategy{
         this.knownCards = knownCards;
         this.strategy = strategy;
     }
+    public Player(final String name, String strategy){
+        this(name);
+        this.strategy = strategy;
+    }
 }
